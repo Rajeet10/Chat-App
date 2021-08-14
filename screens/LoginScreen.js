@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text,StyleSheet,KeyboardAvoidingView } from 'react-native';
 import {Button,Input,Image} from 'react-native-elements';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const SignIn=()=>{
@@ -21,13 +21,15 @@ const LoginScreen = () => {
             />
             <View style={styles.inputContainer}>
             <Input
+            value={email}
              placeholder="Email"
               autoFocus
-               type="Email"
+               type="email"
                onChangeText={(text)=>setEmail(text)}
                />
             <Input 
-            placeholder="password" 
+            value={password}
+            placeholder="Password" 
             secureTextEntry
              type="password"
              onChangeText={(text)=>setPassword(text)}
@@ -40,6 +42,7 @@ const LoginScreen = () => {
             />
             <Button 
             containerStyle={styles.button} 
+            onPress={()=>navigation.navigate('Register')}
             title="Register"
             type="outline"
             />

@@ -2,6 +2,7 @@ import React,{useLayoutEffect, useState} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet,KeyboardAvoidingView } from 'react-native';
 import {Button,Input,Text} from 'react-native-elements';
+import { auth } from '../firebase';
 
 const RegisterScreen = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -16,7 +17,16 @@ const RegisterScreen = ({ navigation }) => {
     },[navigation])
     
     const register=()=>{
-        
+        auth.createUserWithEmailAndPassword(email,password)
+        .createUserWithEmailAndPassword((authUser)=>{
+            authUser.user.update({
+                displayName:name,
+                photoURL:imageUrl || 
+                "https://img.favpng.com/25/13/19/samsung-galaxy-a8-a8-user-login-telephone-avatar-png-favpng-dqKEPfX7hPbc6SMVUCteANKwj.jpg",
+
+            });
+        })
+        .catch(error=>alert(error.message));
     }
 
     return (

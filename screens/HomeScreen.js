@@ -49,7 +49,7 @@ const HomeScreen = ({navigation}) => {
                 </View>,
             
         })
-    },[])
+    },[navigation])
     return (
         <SafeAreaView>
             <ScrollView>

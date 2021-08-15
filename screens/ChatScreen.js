@@ -1,11 +1,13 @@
-import React, { useLayoutEffect } from 'react'
-import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView } from 'react-native'
+import React, { useLayoutEffect,useState } from 'react'
+import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView,TextInput } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import {AntDesign,FontAwesome,Ionicons} from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
 
 
+
 const ChatScreen = ({ navigation,route }) => {
+    const [input, setInput] = useState("");
     useLayoutEffect(()=>{
       navigation.setOptions({
       title:"Chat",
@@ -74,7 +76,12 @@ const ChatScreen = ({ navigation,route }) => {
                  {/* chat goes here */}
              </ScrollView>
              <View style={styles.footer}>
-
+              <TextInput 
+              value={input}
+              onChangeText={(text)=>setInput(text)}
+              placeholder="Signal Message" 
+              style={styles.textInput}
+              />
              </View>
              </>
             </KeyboardAvoidingView>

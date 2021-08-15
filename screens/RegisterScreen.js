@@ -20,7 +20,7 @@ const RegisterScreen = ({ navigation }) => {
         auth
         .createUserWithEmailAndPassword(email, password)
         .then((authUser)=>{
-            authUser.user.update({
+            authUser.user.updateProfile({
                 displayName:name,
                 photoURL:imageUrl || 
                 "https://img.favpng.com/25/13/19/samsung-galaxy-a8-a8-user-login-telephone-avatar-png-favpng-dqKEPfX7hPbc6SMVUCteANKwj.jpg",

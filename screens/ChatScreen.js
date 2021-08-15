@@ -1,9 +1,8 @@
 import React, { useLayoutEffect,useState } from 'react'
-import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView,TextInput,TouchableWithoutFeedback } from 'react-native'
+import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView,TextInput,TouchableWithoutFeedback,Keyboard } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import {AntDesign,FontAwesome,Ionicons} from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
-import { Keyboard } from 'react-native'
 import * as firebase from 'firebase'
 import { db,auth } from '../firebase'
 
@@ -11,6 +10,7 @@ import { db,auth } from '../firebase'
 
 const ChatScreen = ({ navigation,route }) => {
     const [input, setInput] = useState("");
+    const [messages, setMessages] = useState([]);
     useLayoutEffect(()=>{
       navigation.setOptions({
       title:"Chat",
@@ -78,6 +78,21 @@ const ChatScreen = ({ navigation,route }) => {
      })
      setInput("")
     }
+    useLayoutEffect(()=>{
+      const unsubscribe=db
+      .collection('chats')
+      .doc(route.params.id)
+      .collection('messages')
+      .orderBy('timestamp','desc')
+      .onSnapshot((snapshot)=>setMessages(
+          snapshot.docs.map(doc=>({
+           id:doc.id,
+           data:doc.data()
+          }))
+      ));
+      return unsubscribe;
+    },[route]);
+
     return (
         <SafeAreaView style={{flex:1, backgroundColor:"white"}}>
             <StatusBar style="light"/>
@@ -89,7 +104,24 @@ const ChatScreen = ({ navigation,route }) => {
                 <TouchableWithoutFeedback>
              <>
              <ScrollView>
-                 {/* chat goes here */}
+                 {messages.map(({id,data})=>{
+                    data.email===auth.currentUser.email ? (
+                        <View key={id} style={styles.receiver}>
+                          <Avatar />
+                          <Text style={styles.recieverText}>
+                             {data.message}
+                          </Text>
+                        </View>
+                    ):
+                    (
+                        <View  style={styles.sender}>
+                            <Avatar/>
+                         <Text style={styles.senderText}>
+                             {data.message}
+                          </Text>
+                        </View>
+                    )
+                 })}
              </ScrollView>
              <View style={styles.footer}>
               <TextInput 
@@ -136,5 +168,24 @@ textInput:{
     padding:10,
     color:'grey',
     borderRadius:30
+},
+receiver:{
+    padding:15,
+    backgroundColor:'#ECECEC',
+    alignSelf:'flex-end',
+    borderRadius:20,
+    marginRight:15,
+    marginBottom:20,
+    maxWidth:'80%',
+    position:'relative'
+},
+sender:{
+    padding:15,
+    backgroundColor:'#2B68E6',
+    alignSelf:'flex-start',
+    borderRadius:20,
+    margin:15,
+    maxWidth:'80%',
+    position:'relative'
 }
 })

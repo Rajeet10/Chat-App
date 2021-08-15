@@ -17,8 +17,9 @@ const RegisterScreen = ({ navigation }) => {
     },[navigation])
     
     const register=()=>{
-        auth.createUserWithEmailAndPassword(email,password)
-        .createUserWithEmailAndPassword((authUser)=>{
+        auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((authUser)=>{
             authUser.user.update({
                 displayName:name,
                 photoURL:imageUrl || 
@@ -26,8 +27,8 @@ const RegisterScreen = ({ navigation }) => {
 
             });
         })
-        .catch(error=>alert(error.message));
-    }
+        .catch((error)=>alert(error.message));
+    };
 
     return (
         <KeyboardAvoidingView 

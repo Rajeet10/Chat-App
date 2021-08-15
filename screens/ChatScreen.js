@@ -1,8 +1,11 @@
 import React, { useLayoutEffect,useState } from 'react'
-import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView,TextInput } from 'react-native'
+import { View, Text, TouchableOpacity,SafeAreaView,KeyboardAvoidingView,Platform,StyleSheet,ScrollView,TextInput,TouchableWithoutFeedback } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import {AntDesign,FontAwesome,Ionicons} from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import { Keyboard } from 'react-native'
+import * as firebase from 'firebase'
+import { db,auth } from '../firebase'
 
 
 
@@ -65,7 +68,15 @@ const ChatScreen = ({ navigation,route }) => {
     },[navigation]);
 
     const sendMessage=()=>{
-
+     Keyboard.dismiss();
+     db.collection('chats').doc(route.params.id).collection('messages').add({
+         timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+         message:input,
+         displayName:auth.currentUser.displayName,
+         email:auth.currentUser.email,
+         photoURL:auth.currentUser.photoURL
+     })
+     setInput("")
     }
     return (
         <SafeAreaView style={{flex:1, backgroundColor:"white"}}>
@@ -75,6 +86,7 @@ const ChatScreen = ({ navigation,route }) => {
             style={styles.container}
             keyboardVerticalOffset={90}
             >
+                <TouchableWithoutFeedback>
              <>
              <ScrollView>
                  {/* chat goes here */}
@@ -83,6 +95,7 @@ const ChatScreen = ({ navigation,route }) => {
               <TextInput 
               value={input}
               onChangeText={(text)=>setInput(text)}
+              onSubmitEditing={sendMessage}
               placeholder="Signal Message" 
               style={styles.textInput}
               />
@@ -93,6 +106,7 @@ const ChatScreen = ({ navigation,route }) => {
               </TouchableOpacity>
              </View>
              </>
+             </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

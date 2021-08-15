@@ -58,7 +58,14 @@ const HomeScreen = ({navigation}) => {
                 </View>,
             
         })
-    },[navigation])
+    },[navigation]);
+
+    const enterChat=(id,chatName)=>{
+     navigation.navigate("Chat",{
+         id:id,
+         chatName:chatName
+     });
+    };
     return (
         <SafeAreaView>
             <ScrollView style={StyleSheet.container}>
@@ -67,6 +74,7 @@ const HomeScreen = ({navigation}) => {
                     key={id}
                      id={id} 
                      chatName={chatName}
+                     enterChat={enterChat}
                      />
                 ))}
                 
@@ -80,6 +88,6 @@ export default HomeScreen;
 const style=StyleSheet.create({
 container:{
     height:"100%",
-    
+
 }
 });

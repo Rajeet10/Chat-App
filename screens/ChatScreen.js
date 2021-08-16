@@ -69,14 +69,16 @@ const ChatScreen = ({ navigation,route }) => {
 
     const sendMessage=()=>{
      Keyboard.dismiss();
-     db.collection('chats').doc(route.params.id).collection('messages').add({
+     db.collection('chats')
+     .doc(route.params.id)
+     .collection('messages').add({
          timestamp:firebase.firestore.FieldValue.serverTimestamp(),
          message:input,
          displayName:auth.currentUser.displayName,
          email:auth.currentUser.email,
          photoURL:auth.currentUser.photoURL
      })
-     setInput("")
+     setInput("");
     }
     useLayoutEffect(()=>{
       const unsubscribe=db
@@ -89,7 +91,8 @@ const ChatScreen = ({ navigation,route }) => {
            id:doc.id,
            data:doc.data()
           }))
-      ));
+      )
+      );
       return unsubscribe;
     },[route]);
 
@@ -101,10 +104,10 @@ const ChatScreen = ({ navigation,route }) => {
             style={styles.container}
             keyboardVerticalOffset={90}
             >
-                <TouchableWithoutFeedback>
-             <>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <>
              <ScrollView>
-                 {messages.map(({id,data})=>{
+                 {messages.map(({id,data})=>(
                     data.email===auth.currentUser.email ? (
                         <View key={id} style={styles.receiver}>
                           <Avatar />
@@ -121,7 +124,7 @@ const ChatScreen = ({ navigation,route }) => {
                           </Text>
                         </View>
                     )
-                 })}
+                 ))}
              </ScrollView>
              <View style={styles.footer}>
               <TextInput 
